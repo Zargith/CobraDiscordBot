@@ -32,12 +32,30 @@ function redirectCommands(message) {
 }
 
 function ownerDMCommands(message) {
+
 	message.channel.send("Message bien reçu!")
 }
 
 function ownerCommands(message) {
-//TODO fonction qui prend !cobraEvent et avec le message sous forme "date | sujet"  (utiliser split) qui renvoit un embed avec la date et le thème dans le chan évènement
 
+	if (message.content.startsWith(config.prefix + "Event")) {
+		let args = message.content.split("|")
+		args.shift()
+		if (args.length != 3) {
+			message.channel.send({embed:{color: 16711680, description: "__**ERREUR**__\nLe nombre d'arguments n'est pas bon.\nle message doit être sous le forme `!cobraEvent | channel | date | thème`"}})
+			return
+		}
+		args[0] = args[0].substring(1, args[0].length - 1)
+		args[1] = args[1].substring(1, args[1].length)
+		args[2] = args[2].substring(1, args[2].length)
+		let chan = bot.guilds.first().channels.find(ch => ch.name === args[0])
+		if (!chan) {
+			message.channel.send({embed:{color: 16711680, description: "__**ERREUR**__\nLe channel *"+ args[0] + "* n\'a pas été trouvé"}})
+			bot.users.get(config.ownerID).send({embed:{color: 16711680, description: "__**ERREUR**__\nLe channel *"+ args[0] + "* n\'a pas été trouvé"}})
+			return
+		}
+		chan.send({embed: {color: 3447003, description: "__**Coding club à venir !**__", fields: [{name: "Le " + args[1], value: "Le thème sera: " + args[2]}]}})
+	}
 	redirectCommands(message)
 }
 
@@ -57,7 +75,7 @@ bot.on("message", message => {
 		else
 			ownerCommands(message)
 	} catch (exception) {
-		message.channel.send({ embed: { color: 16711680, description: "__**ERREUR**__\nLa commande n'a pas fonctionnée <:surprised_carapuce:568777407046221824>\n\n__L'erreur suivante s'est produite:__\n*" + exception + "*"}})
+		message.channel.send({ embed: { color: 16711680, description: "__**ERREUR**__\nLa commande n'a pas fonctionnée...\n\n__L'erreur suivante s'est produite:__\n*" + exception + "*"}})
 		bot.users.get(config.ownerID).send({embed:{color: 16711680, description: "__**ERREUR**__\nL'utilisateur " + message.author.username + ", sur le serveur " + message.member.guild.name +  " a envoyé la commande:\n" + message.content + "\n\n__L'erreur suivante s'est produite:__\n*" + exception.stack + "*"}})
 		console.log("ERREUR\nLors de l'arrivée de l'utilisateur " + message.author.username + " sur le serveur " + message.member.guild.name + "\nL'erreur suivante s'est produite:\n" + exception.stack)
 	}
