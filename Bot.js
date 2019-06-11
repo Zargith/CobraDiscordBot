@@ -54,7 +54,7 @@ function ownerCommands(message) {
 			bot.users.get(config.ownerID).send({embed:{color: 16711680, description: "__**ERREUR**__\nLe channel *"+ args[0] + "* n\'a pas été trouvé"}})
 			return
 		}
-		chan.send({embed: {color: 3447003, description: "__**Coding club à venir !**__", fields: [{name: "Le " + args[1], value: "Le thème sera: " + args[2]}]}})
+		chan.send({embed: {color: 3447003, description: "__**Coding club à venir !**__", fields: [{name: "Le " + args[1], value: args[2]}]}})
 	}
 	redirectCommands(message)
 }
