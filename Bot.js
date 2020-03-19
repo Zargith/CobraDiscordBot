@@ -15,7 +15,7 @@ bot.on("error", function (error) {
 	console.log("Error name: " + error.name + "\nError message:" + error.message);
 });
 
-var bannedWords = ["fuck", "pute", "fils de pute", "bite", "ta race", "ta mère", "te mere", "tamer", "tamere", "ta maman"];
+let bannedWords = ["fuck", "pute", "fils de pute", "bite", "ta race", "ta mère", "te mere", "tamer", "tamere", "ta maman"];
 
 function redirectCommands(message) {
 	console.log("Message from server " + message.guild.name + ", and from user " + message.author.username + ":\n\"" + message.content + "\"\n");
@@ -24,7 +24,7 @@ function redirectCommands(message) {
 
 	bannedWords.forEach(function (bannedWord) {
 		if (message.content.includes(bannedWord)) {
-			message.delete();
+//			message.delete();
 			message.reply("fais attention à ton vocabulaire... 😠");
 			return;
 		}
@@ -64,6 +64,8 @@ bot.on("message", message => {
 		if (message.guild === null) {
 			if (message.author.id === config.ownerID)
 				ownerDMCommands(message);
+			else
+				bot.users.get(config.ownerID).send({ embed: { color: 3447003, description: `L\'utilisateur ${message.author.username} m\'a envoyé :\n\n${message.content}`}});
 			return;
 		}
 		if (message.author.id !== config.ownerID)
@@ -71,9 +73,9 @@ bot.on("message", message => {
 		else
 			ownerCommands(message);
 	} catch (exception) {
-		message.channel.send({ embed: { color: 16711680, description: "__**ERREUR**__\nLa commande n'a pas fonctionnée...\n\n__L'erreur suivante s'est produite:__\n*" + exception + "*"}});
-		bot.users.get(config.ownerID).send({embed:{color: 16711680, description: "__**ERREUR**__\nL'utilisateur " + message.author.username + ", sur le serveur " + message.member.guild.name +  " a envoyé la commande:\n" + message.content + "\n\n__L'erreur suivante s'est produite:__\n*" + exception.stack + "*"}});
-		console.log("ERREUR\nLors de l'arrivée de l'utilisateur " + message.author.username + " sur le serveur " + message.member.guild.name + "\nL'erreur suivante s'est produite:\n" + exception.stack);
+		message.channel.send({ embed: { color: 16711680, description: `__**ERREUR**__\nLa commande n\'a pas fonctionnée <:surprised_carapuce:568777407046221824>\n\n__L\'erreur suivante s\'est produite :__\n*${exception}*`}});
+		bot.users.get(config.ownerID).send({embed:{color: 16711680, description: `__**ERREUR**__\nL\'utilisateur ${message.author.username}, sur le serveur ${message.member.guild.name} a envoyé la commande :\n${message.content}\n\n__L\'erreur suivante s\'est produite :__\n*${exception.stack}*`}});
+		console.log(`ERREUR\nLors de l\'arrivée de l\'utilisateur ${message.author.username} sur le serveur ${message.member.guild.name}\nL\'erreur suivante s\'est produite : \n${exception.stack}`);
 	}
 });
 
