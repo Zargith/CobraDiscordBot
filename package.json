@@ -11,7 +11,7 @@
   "description": "",
   "dependencies": {
     "@discordjs/uws": "^10.149.0",
-    "@hapi/hoek": "^8.5.0",
+    "@hapi/hoek": "^9.0.4",
     "audit": "0.0.6",
     "bufferutil": "^4.0.1",
     "canvas": "^2.6.1",
